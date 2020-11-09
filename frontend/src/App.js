@@ -1,20 +1,18 @@
 import React, {Component} from 'react'
 import './App.css';
-import NavigationBar from "./navbar";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+
 import Home from "./Components/home";
 import EntryDetail from "./Components/entryDetail";
+import AddEntry from "./Components/addEntry";
+import NavigationBar from "./Components/navbar";
 
 class App extends Component{
     constructor(props) {
         super(props);
         this.state = {
             entryList: [],
-            entry: {
-                id:null,
-                description:'',
-            },
             editing:false
         }
 
@@ -36,7 +34,6 @@ class App extends Component{
             )
     }
 
-    handleChange
 
     render() {
         var entries = this.state.entryList
@@ -44,7 +41,8 @@ class App extends Component{
     return (
         <>
             <Router>
-                <NavigationBar/>
+                <NavigationBar />
+
                 <Switch>
                     <Route path={'/'} exact component={ () => <Home entries={entries} /> } />
                     <Route path={'/detail/:id'} component={({ match }) =>
@@ -52,6 +50,8 @@ class App extends Component{
                             entry.id === parseInt(match.params.id,10),
                             console.log(match)
                     )}  /> } />
+
+                    <Route path={'/addEntry'} component={AddEntry} />
                 </Switch>
             </Router>
 
@@ -62,3 +62,4 @@ class App extends Component{
 }
 
 export default App;
+

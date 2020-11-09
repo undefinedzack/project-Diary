@@ -36,7 +36,7 @@ def entryDetail(request, key):
 
     return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['POST','GET'])
 def entryCreate(request):
     serializer = EntrySerializer(data=request.data)
 
