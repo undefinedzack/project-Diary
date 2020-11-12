@@ -13,10 +13,10 @@ def apiOverview(request):
 
     api_urls = {
         'Entires':'/entry-list/',
-        'Create': '/entry-create/',
+        'Create':'/entry-create/',
         'Read':'/entry-detail/<int:pk>/',
-        'Update':'/entry-update/<int:pk>',
-        'Delete':'/entry-delete/<int:pk>'
+        'Update':'/entry-update/<int:pk>/',
+        'Delete':'/entry-delete/<int:pk>/'
     }
 
     return Response(api_urls)

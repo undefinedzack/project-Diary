@@ -7,6 +7,7 @@ import Home from "./Components/home";
 import EntryDetail from "./Components/entryDetail";
 import AddEntry from "./Components/addEntry";
 import NavigationBar from "./Components/navbar";
+import EditingSection from "./Components/EditingSection";
 
 class App extends Component{
     constructor(props) {
@@ -35,6 +36,7 @@ class App extends Component{
     }
 
 
+
     render() {
         var entries = this.state.entryList
 
@@ -44,14 +46,16 @@ class App extends Component{
                 <NavigationBar />
 
                 <Switch>
+                    <Route path={'/editingSection'} exact component={EditingSection} />
                     <Route path={'/'} exact component={ () => <Home entries={entries} /> } />
                     <Route path={'/detail/:id'} component={({ match }) =>
                         <EntryDetail entry={entries.filter((entry) =>
-                            entry.id === parseInt(match.params.id,10),
-                            console.log(match)
+                            entry.id === parseInt(match.params.id,10)
                     )}  /> } />
 
-                    <Route path={'/addEntry'} component={AddEntry} />
+                    <Route path={'/addEntry'} component={() => <AddEntry fetchEntries={this.fetchEntires}  /> }/>
+
+                    <Route path={'/testingHooks'} component={EditingSection} />
                 </Switch>
             </Router>
 

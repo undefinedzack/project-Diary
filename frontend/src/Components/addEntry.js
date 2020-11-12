@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {Redirect} from "react-router-dom";
 
 class AddEntry extends Component{
 
@@ -11,7 +12,7 @@ class AddEntry extends Component{
             },
         }
 
-        this.fetchEntires = this.fetchEntires.bind(this)
+        this.fetchIt = this.fetchIt.bind(this)
         this.handleTextInput = this.handleTextInput.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.getCookie = this.getCookie.bind(this)
@@ -34,19 +35,14 @@ class AddEntry extends Component{
         return cookieValue;
     }
 
-    fetchEntires(){
-        console.log('Fetching.......')
-        fetch('http://127.0.0.1:8000/api/entry-list/')
-            .then(response => response.json())
-            .then(data =>
-                this.setState({
-                    entryList: data
-                })
-            )
+
+
+    fetchIt(){
+        this.props.fetchEntries()
     }
 
     handleTextInput(t){
-        var value = t.target.value
+        const value = t.target.value
 
         this.setState({
             entry: {
@@ -75,7 +71,7 @@ class AddEntry extends Component{
             },
             body: JSON.stringify(this.state.entry)
         }).then( (response) => {
-            this.fetchEntires()
+            this.fetchIt()
             this.setState({
                 entry: {
                     dateTime: '',
@@ -103,12 +99,11 @@ class AddEntry extends Component{
                     {/*</div>*/}
                     <div className={"form-group"}>
                         <label htmlFor={"description"}>Description</label>
-                        <input onChange={this.handleTextInput} type={"text"} id={"description"} className={"form-control"}/>
+                        <input value={this.state.entry.description} onChange={this.handleTextInput} type={"text"} id={"description"} className={"form-control"}/>
                     </div>
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </div>
-
         )
     }
 }
