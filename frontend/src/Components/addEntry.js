@@ -1,111 +1,64 @@
-import React, {Component} from 'react'
-import {Redirect} from "react-router-dom";
+import React, {useState, useEffect, useContext} from 'react'
 
-class AddEntry extends Component{
+import {FunctionDatabase} from "../App"
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            entry: {
-                dateTime: '',
-                description:'',
-            },
-        }
+const AddEntry = () => {
+    const {fetchEntries, clearTextArea} = useContext(FunctionDatabase)
+    const [entry,setEntry] = useState({})
 
-        this.fetchIt = this.fetchIt.bind(this)
-        this.handleTextInput = this.handleTextInput.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.getCookie = this.getCookie.bind(this)
-    }
+    const handleChange = (e) => {
+        const value = e.target.value
 
-    //for CSRF token { source -> https://docs.djangoproject.com/en/3.1/ref/csrf/ }
-     getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-
-
-    fetchIt(){
-        this.props.fetchEntries()
-    }
-
-    handleTextInput(t){
-        const value = t.target.value
-
-        this.setState({
-            entry: {
-                ...this.state.entry,
-                [t.target.id]: value,
-                dateTime: new Date().toISOString()
-            }
+        setEntry({
+            ...entry,
+            dateTime: new Date().toISOString(),
+            description: value
         })
-
-        console.log(this.state.entry)
     }
 
-    handleSubmit(t){
-        t.preventDefault()
-        console.log(Math.round((new Date()).getTime() / 1000))
-        console.log('Entry: ', this.state.entry)
+    const handleSubmit = async (e) => {
+        e.preventDefault()
 
-        var csrftoken = this.getCookie('csrftoken')
+        let url
 
-        var url = 'http://127.0.0.1:8000/api/entry-create/'
-        fetch(url, {
-            method: 'POST',
+        if(entry.id != null)
+            url = `http://127.0.0.1:8000/api/entry-update/${entry.id}/`
+        else
+            url = 'http://127.0.0.1:8000/api/entry-create/'
+
+        await fetch(url,{
+            method:'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': csrftoken
+                'Content-type': 'application/json'
             },
-            body: JSON.stringify(this.state.entry)
-        }).then( (response) => {
-            this.fetchIt()
-            this.setState({
-                entry: {
-                    dateTime: '',
-                    description:'',
-                }
-            })
-        }).catch( (error) => {
-            console.log('Error',error)
+            body: JSON.stringify(entry)
         })
+
+        console.log('submmited')
+
+        await fetchEntries()
+
     }
 
-
-
-    render() {
-        return (
-            <div className={"container"}>
-                <form onSubmit={this.handleSubmit}>
-                    {/*<div className={"form-group"}>*/}
-                    {/*    <label htmlFor={"date"}>Date</label>*/}
-                    {/*    <input onChange={this.handleTextInput} type={"date"} id={"date"} className={"form-control"}/>*/}
-                    {/*</div>*/}
-                    {/*<div className={"form-group"}>*/}
-                    {/*    <label htmlFor={"time"}>Time</label>*/}
-                    {/*    <input onChange={this.handleTextInput} type={"time"} id={"time"} className={"form-control"}/>*/}
-                    {/*</div>*/}
-                    <div className={"form-group"}>
-                        <label htmlFor={"description"}>Description</label>
-                        <input value={this.state.entry.description} onChange={this.handleTextInput} type={"text"} id={"description"} className={"form-control"}/>
+    return (
+        <div className={"container mt-5"}>
+            <h3>Description</h3>
+            <form onSubmit={handleSubmit}>
+                <div className="row">
+                    <div className="col-12">
+                        <textarea value={entry.description} onChange={handleChange} rows={"10"} cols={155} />
                     </div>
-                    <button type="submit" className="btn btn-primary">Submit</button>
-                </form>
-            </div>
+                </div>
+                <div className="row justify-content-md-center">
+                    <div className="col-md-auto">
+                        <button type={"submit"} className={"btn btn-warning"}>Save</button>
+                        <button className={"btn btn-secondary"} onClick={clearTextArea}>Clear</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         )
-    }
 }
 
 export default AddEntry

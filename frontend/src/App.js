@@ -1,69 +1,121 @@
-import React, {Component} from 'react'
+import React, {useState, useEffect} from 'react'
 import './App.css';
 
-import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 import Home from "./Components/home";
-import EntryDetail from "./Components/entryDetail";
-import AddEntry from "./Components/addEntry";
 import NavigationBar from "./Components/navbar";
-import EditingSection from "./Components/EditingSection";
+import Main from "./Components/main";
+import EntryDetail from "./Components/detail";
+import AddEntry from "./Components/addEntry";
 
-class App extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            entryList: [],
-            editing:false
-        }
+export const FunctionDatabase = React.createContext()
 
-        this.fetchEntires = this.fetchEntires.bind(this)
+const App = () => {
+    const [entries, setEntries] = useState([])
+    const [entry, setEntry] = useState({
+        id: null,
+        dateTime: '',
+        description: ''
+    })
+
+    useEffect( () => {
+        fetchEntries()
+        console.log('im here')
+    },[])
+
+    const fetchEntries = async () => {
+        const response = await fetch('http://127.0.0.1:8000/api/entry-list/')
+        const entries = await response.json()
+        setEntries(entries)
     }
 
-    componentDidMount() {
-        this.fetchEntires()
+    const clearTextArea = () => {
+        setEntry({
+            ...entry,
+            id: null,
+            description: ''
+        })
     }
 
-    fetchEntires(){
-        console.log('Fetching.......')
-        fetch('http://127.0.0.1:8000/api/entry-list/')
-            .then(response => response.json())
-            .then(data =>
-                this.setState({
-                    entryList: data
-                })
-            )
+    const deleteEntry = async (entry) => {
+        await fetch(`http://127.0.0.1:8000/api/entry-delete/${entry.id}/`,{
+            method: 'DELETE',
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        })
+
+        await fetchEntries()
     }
 
+    const editEntry = (entry) => {
+        setEntry({
+            ...entry,
+            id: entry.id,
+            description: entry.description
+        })
+    }
 
+    const handleChange = (e) => {
+        const value = e.target.value
 
-    render() {
-        var entries = this.state.entryList
+        setEntry({
+            ...entry,
+            dateTime: new Date().toISOString(),
+            description: value
+        })
+
+        // console.log(Entry)
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        let url
+
+        if(entry.id != null)
+            url = `http://127.0.0.1:8000/api/entry-update/${entry.id}/`
+        else
+            url = 'http://127.0.0.1:8000/api/entry-create/'
+
+        await fetch(url,{
+            method:'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(entry)
+        })
+
+        await fetchEntries()
+    }
 
     return (
         <>
-            <Router>
-                <NavigationBar />
+            <FunctionDatabase.Provider value={{fetchEntries, entries, clearTextArea, editEntry, deleteEntry }} >
+                <Router>
+                    <NavigationBar />
 
-                <Switch>
-                    <Route path={'/editingSection'} exact component={EditingSection} />
-                    <Route path={'/'} exact component={ () => <Home entries={entries} /> } />
-                    <Route path={'/detail/:id'} component={({ match }) =>
-                        <EntryDetail entry={entries.filter((entry) =>
-                            entry.id === parseInt(match.params.id,10)
-                    )}  /> } />
-
-                    <Route path={'/addEntry'} component={() => <AddEntry fetchEntries={this.fetchEntires}  /> }/>
-
-                    <Route path={'/testingHooks'} component={EditingSection} />
-                </Switch>
-            </Router>
-
+                    <Switch>
+                        <Route path={'/'} exact> <Home /> </Route>
+                        <Route path={'/main'} exact> <Main /> </Route>
+                        <Route path={'/detail/:id'} children={<EntryDetail />} />
+                        <Route path={'/addEntry'} > <AddEntry /></Route>
+                    </Switch>
+                </Router>
+            </FunctionDatabase.Provider>
         </>
-
     )
-  }
 }
+
+
+// { (match) => {
+//                             console.log(entries)
+//                             return(
+//                                 <EntryDetail entry={(entries) => {entries.filter( (entry) =>
+//                                 entry.id === parseInt(match.params.id,10))}} />
+//                             )
+//                         }}
 
 export default App;
 

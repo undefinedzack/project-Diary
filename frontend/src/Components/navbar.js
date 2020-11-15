@@ -13,10 +13,7 @@ class NavigationBar extends Component{
                             <Link to={'/'}><div className="nav-link">Home</div></Link>
                         </li>
                         <li className="nav-item active">
-                            <Link to={'/editingSection'}><div className="nav-link">Reading Section</div></Link>
-                        </li>
-                        <li className="nav-item active">
-                            <Link to={'/editingSection'}><div className="nav-link">Editing Section</div></Link>
+                            <Link to={'/main'}><div className="nav-link">Main</div></Link>
                         </li>
                     </ul>
                 </div>
