@@ -39,7 +39,7 @@ const App = () => {
     }
 
     const deleteEntry = async (entry) => {
-        await fetch(`http://127.0.0.1:8000/api/entry-delete/${entry.id}/`,{
+        await fetch(`https://vast-ocean-32435.herokuapp.com/api/entry-delete/${entry.id}/`,{
             method: 'DELETE',
             headers:{
                 'Content-Type': 'application/json'
@@ -75,9 +75,9 @@ const App = () => {
         let url
 
         if(entry.id != null)
-            url = `http://127.0.0.1:8000/api/entry-update/${entry.id}/`
+            url = `https://vast-ocean-32435.herokuapp.com/api/entry-update/${entry.id}/`
         else
-            url = 'http://127.0.0.1:8000/api/entry-create/'
+            url = 'https://vast-ocean-32435.herokuapp.com/api/entry-create/'
 
         await fetch(url,{
             method:'POST',

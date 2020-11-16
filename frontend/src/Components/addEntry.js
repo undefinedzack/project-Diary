@@ -22,9 +22,9 @@ const AddEntry = () => {
         let url
 
         if(entry.id != null)
-            url = `http://127.0.0.1:8000/api/entry-update/${entry.id}/`
+            url = `https://vast-ocean-32435.herokuapp.com/api/entry-update/${entry.id}/`
         else
-            url = 'http://127.0.0.1:8000/api/entry-create/'
+            url = 'https://vast-ocean-32435.herokuapp.com/api/entry-create/'
 
         await fetch(url,{
             method:'POST',
