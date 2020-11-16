@@ -119,4 +119,5 @@ STATICFILES_DIRS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://keen-newton-5799e3.netlify.app"
 ]

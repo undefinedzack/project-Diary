@@ -25,7 +25,7 @@ const App = () => {
     },[])
 
     const fetchEntries = async () => {
-        const response = await fetch('http://127.0.0.1:8000/api/entry-list/')
+        const response = await fetch('https://vast-ocean-32435.herokuapp.com/api/entry-list/')
         const entries = await response.json()
         setEntries(entries)
     }
