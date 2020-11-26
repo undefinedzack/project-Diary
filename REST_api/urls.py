@@ -14,6 +14,8 @@ urlpatterns = [
 # urls for entirely different project, just writing here so that I don't have to deploy REST framework twice
 # yeah yeah it saves time and money, so why not
 
-    path('urlz/<int:key>', views.urlsss, name='url of course')
+    path('urlz/', views.urlList, name='url list'),
+    path('urlz/<int:key>', views.urlsss, name='single url'),
+
 
 ]

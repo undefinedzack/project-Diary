@@ -68,6 +68,13 @@ def deleteEntry(request, key):
 # yeah yeah it saves time and money, so why not
 
 @api_view(['GET'])
+def urlList(request):
+    urls = URLS.objects.all()
+    serializer = URLSerializer(urls, many=True)
+
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def urlsss(request, key):
     urls = URLS.objects.get(pk = key)
 
