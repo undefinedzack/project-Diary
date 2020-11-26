@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from .models import Diary
+from .models import Diary, URLS
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import EntrySerializer
+from .serializers import EntrySerializer, URLSerializer
 
 @api_view(['GET'])
 def apiOverview(request):
@@ -62,3 +62,15 @@ def deleteEntry(request, key):
     entry.delete()
 
     return Response('Entry deleted successfully')
+
+
+# A view for entirely different project, just writing here so that I don't have to deploy REST framework twice
+# yeah yeah it saves time and money, so why not
+
+@api_view(['GET'])
+def urlsss(request, key):
+    urls = URLS.objects.get(pk = key)
+
+    serializer = URLSerializer(urls, many=False)
+
+    return Response(serializer.data)

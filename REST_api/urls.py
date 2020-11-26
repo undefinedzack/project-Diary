@@ -10,4 +10,10 @@ urlpatterns = [
     path('entry-create/', views.entryCreate, name='entry create'),
     path('entry-update/<int:key>/', views.entryUpdate, name='entry update'),
     path('entry-delete/<int:key>/', views.deleteEntry, name='entry delete'),
+
+# urls for entirely different project, just writing here so that I don't have to deploy REST framework twice
+# yeah yeah it saves time and money, so why not
+
+    path('urlz/<int:key>', views.urlsss, name='url of course')
+
 ]
