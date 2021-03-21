@@ -46,7 +46,7 @@ const AddEntry = () => {
             <form onSubmit={handleSubmit}>
                 <div className="row">
                     <div className="col-12">
-                        <textarea value={entry.description} onChange={handleChange} rows={"10"} cols={155} />
+                        <textarea value={entry.description} onChange={handleChange} rows={"10"} style={{width: '100%'}}/>
                     </div>
                 </div>
                 <div className="row justify-content-md-center">

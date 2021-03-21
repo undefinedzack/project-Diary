@@ -97,8 +97,8 @@ const App = () => {
                     <NavigationBar />
 
                     <Switch>
-                        <Route path={'/'} exact> <Home /> </Route>
-                        <Route path={'/main'} exact> <Main /> </Route>
+                        {/*<Route path={'/'} exact> <Home /> </Route>*/}
+                        <Route path={'/'} exact> <Main /> </Route>
                         <Route path={'/detail/:id'} children={<EntryDetail />} />
                         <Route path={'/addEntry'} > <AddEntry /></Route>
                     </Switch>
